@@ -11,16 +11,17 @@ namespace SnowFlakeConsoleApp
     {
         static void Main(string[] args)
         {
-            string connectionString = "scheme=https;ACCOUNT=bea78282;HOST=bea78282.us-east-1.snowflakecomputing.com;port=443; ROLE=sysadmin;WAREHOUSE=compute_wh; USER=nitesh; PASSWORD=XXXXXXX;DB=employeemanagement;SCHEMA=EM";
-      
+            // string connectionString = "Host=jo69808.us-central1.gcp.snowflakecomputing; ROLE=sysadmin;WAREHOUSE=John; USER=johns; PASSWORD=Water123;DB=JOHN;SCHEMA=EM";
+            string connectionString = "scheme=https;host=jo69808.us-central1.gcp.snowflakecomputing.com;ROLE=sysadmin;WAREHOUSE=John;user=johns;password=Water123;DB=JOHN;account=jo69808.us-central1.gcp.*;";
 
-            //Scenario 1. Get the list of employee from Snowflake View which returns Json data  
+
+            //Scenario 1. Get the list of employee from Snowflake View which returns Json data  ///Read The data using snow flake
             using (var conn = new SnowflakeDbConnection())
             {
                 conn.ConnectionString = connectionString;
                 conn.Open();
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from employee_skill_json_view;";
+                cmd.CommandText = "select * from testtable1;";
                 var reader = cmd.ExecuteReader();
                 dynamic employeeList;
                 while (reader.Read())
@@ -29,18 +30,21 @@ namespace SnowFlakeConsoleApp
                     employeeList = reader.GetString(0);
                 }
                 conn.Close();
+                Insert();
             }
+           
 
-            
-
-            //Scenario 2. Call the stored procedure employee_insert_json to insert to json data.  
-            string inputJsonData = @"{employee_name : San, employee_address: Hyderabad}";
+        }
+            public static void Insert()
+            {
+            string connectionString = "scheme=https;host=jo69808.us-central1.gcp.snowflakecomputing.com;ROLE=sysadmin;WAREHOUSE=John;user=johns;password=Water123;DB=JOHN;account=jo69808.us-central1.gcp.*;";
+         
             using (var conn = new SnowflakeDbConnection())
             {
                 conn.ConnectionString = connectionString;
                 conn.Open();
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = "call employee_insert_json('" + inputJsonData + "'); ";
+                cmd.CommandText = "insert into testtable1 values('hello','snowflake'); ";// while calling procedure 
                 var reader = cmd.ExecuteReader();
                 dynamic resultData;
                 while (reader.Read())
